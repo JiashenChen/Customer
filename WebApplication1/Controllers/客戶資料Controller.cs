@@ -14,10 +14,22 @@ namespace WebApplication1.Controllers
     {
         private 客戶資料Entities db = new 客戶資料Entities();
 
-        // GET: 客戶資料
-        public ActionResult Index()
+        public ActionResult 客戶資料統計表()
         {
-            return View(db.客戶資料.ToList());
+
+            return View(db.vw客戶資料統計表.ToList());
+        }
+
+        // GET: 客戶資料
+        public ActionResult Index(string keyword)
+        {
+            var data = db.客戶資料.Where(p => p.是否已刪除 == false).AsQueryable();
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                data = data.Where(p => p.客戶名稱.Contains(keyword));
+            }
+            return View(data.ToList());
         }
 
         // GET: 客戶資料/Details/5
@@ -110,7 +122,8 @@ namespace WebApplication1.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             客戶資料 客戶資料 = db.客戶資料.Find(id);
-            db.客戶資料.Remove(客戶資料);
+            //db.客戶資料.Remove(客戶資料);
+            客戶資料.是否已刪除 = true;
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -122,6 +135,19 @@ namespace WebApplication1.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public ActionResult List()
+        {
+            var data = from p in db.客戶資料
+                       select new 客戶資料
+                       {
+                           客戶名稱 = p.客戶名稱
+
+                       };
+
+
+            return View();
         }
     }
 }

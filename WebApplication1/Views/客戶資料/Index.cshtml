@@ -4,10 +4,16 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>客戶資料清單</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
+
+    @using (Html.BeginForm("Index", "客戶資料", FormMethod.Get))
+    {
+        <input type="search" value="" name="keyword" placeholder="請輸入關鍵字" />
+    }
+
 </p>
 <table class="table">
     <tr>
